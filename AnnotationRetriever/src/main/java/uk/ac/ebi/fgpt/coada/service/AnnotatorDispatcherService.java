@@ -140,7 +140,7 @@ public class AnnotatorDispatcherService {
     private static void printAnnotations(JsonNode annotations) {
 
         try {
-            File f = new File("/home/dwelter/testoutput.txt");
+            File f = new File("/home/dwelter/testoutput2.txt");
 
             Writer out= null;
 
@@ -152,7 +152,7 @@ public class AnnotatorDispatcherService {
             System.out.println(length + " nodes to process in total");
             int done = 1;
             for (JsonNode annotation : annotations) {
-                if(length%done == 0){
+                if(done%20 == 0){
                     int left = length-done;
                     System.out.println(left + " nodes left to process");
                 }
@@ -206,7 +206,7 @@ public class AnnotatorDispatcherService {
                     done++;
                 }
                 else{
-                    out.write("Broken API call for " + annotation.get("annotatedClass").get("links").get("self").toString());
+                    out.write("Broken API call for " + annotation.get("annotatedClass").get("links").get("self").toString() + "\n");
                     done++;
                 }
 
