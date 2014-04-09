@@ -140,13 +140,13 @@ public class AnnotatorDispatcherService {
     private static void printAnnotations(JsonNode annotations) {
 
         try {
-            File f = new File("/home/dwelter/testoutput2.txt");
+            File f = new File("/home/dwelter/testoutput3.txt");
 
             Writer out= null;
 
             out = new BufferedWriter(new FileWriter(f));
 
-            out.write("ID \t prefLabel \t ontology \t from \t to \t matchType \t text");
+            out.write("ID \t prefLabel \t ontology \t from \t to \t matchType \t text \n");
 
             int length = annotations.size();
             System.out.println(length + " nodes to process in total");
@@ -167,18 +167,19 @@ public class AnnotatorDispatcherService {
                     JsonNode annot = annotation.get("annotations");
 
 
-                    out.write(classDetails.get("@id").toString() + "\t"
-                                        + classDetails.get("prefLabel").toString() + "\t"
-                                        + classDetails.get("links").get("ontology").toString() + "\t");
+
 
                     for(JsonNode data: annot){
+                        out.write(classDetails.get("@id").toString() + "\t"
+                                + classDetails.get("prefLabel").toString() + "\t"
+                                + classDetails.get("links").get("ontology").toString() + "\t");
                         out.write(data.get("from").toString() + "\t"
                                         + data.get("to").toString() + "\t"
                                         + data.get("matchType").toString() + "\t"
-                                        + data.get("text").toString());
+                                        + data.get("text").toString() + "\n");
                     }
 
-                    out.write("\n");
+//                    out.write("\n");
     //                                    + annotation.get("annotations").get("from").toString() + "\t"
     //                                    + annotation.get("annotations").get("to").toString() + "\t"
     //                                    + annotation.get("annotations").get("matchType").toString() + "\t"
@@ -212,6 +213,7 @@ public class AnnotatorDispatcherService {
 
 
             }
+            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
