@@ -41,8 +41,9 @@ public class AnnotatorDispatcherService {
     static final ObjectMapper mapper = new ObjectMapper();
 
     private Logger log = LoggerFactory.getLogger(getClass());
-
-
+    private String outFile;
+    private String targetOntology;
+    private String stopWords;
 
 
     public AnnotatorDispatcherService(){
@@ -54,7 +55,7 @@ public class AnnotatorDispatcherService {
         try {
             properties.load(getClass().getClassLoader().getResource("annotator.properties").openStream());
             this.annotatorString = properties.getProperty("bioportal.root")
-                    .concat(properties.getProperty("bioportal.annotator"))        ;
+                    .concat(properties.getProperty("bioportal.annotator"));
               //      .concat(properties.getProperty("bioportal.apikey"));
 
             API_KEY = properties.getProperty("bioportal.apikey");
@@ -88,7 +89,16 @@ public class AnnotatorDispatcherService {
 
             idList = "text=".concat(idList);
 
-     //       String query = annotatorString.replace("{inputText}", idList);
+            if(targetOntology != ""){
+                idList = idList.concat("&ontologies=").concat(targetOntology);
+            }
+            if(stopWords != ""){
+                idList = idList.concat("&stop_words=").concat(stopWords);
+            }
+            idList = idList.concat("&longest_only=true");
+
+
+            //       String query = annotatorString.replace("{inputText}", idList);
 
             System.out.println("Annotator query is " + annotatorString.concat(idList));
 
@@ -121,7 +131,7 @@ public class AnnotatorDispatcherService {
   //      try {
       //      if (response.getStatusLine().getStatusCode() == HttpStatus.OK.value()) {
                 JsonNode annotations = jsonToNode(post(annotatorString, queryUri));
-                printAnnotations(annotations);
+                printAnnotations(annotations, getOutFile());
 
 
         //        results = mapper.readValue(entityIn, new TypeReference<List<BPAnnotation>>() {});
@@ -137,10 +147,10 @@ public class AnnotatorDispatcherService {
 //        }
     }
 
-    private static void printAnnotations(JsonNode annotations) {
+    private static void printAnnotations(JsonNode annotations, String fileName) {
 
         try {
-            File f = new File("/home/dwelter/testoutput3.txt");
+            File f = new File(fileName);
 
             Writer out= null;
 
@@ -301,4 +311,27 @@ public class AnnotatorDispatcherService {
     }
 
 
+    public void setOutFile(String outFile) {
+        this.outFile = outFile;
+    }
+
+    public String getOutFile() {
+        return outFile;
+    }
+
+    public void setTargetOntology(String targetOntology) {
+        this.targetOntology = targetOntology;
+    }
+
+    public String getTargetOntology() {
+        return targetOntology;
+    }
+
+    public void setStopWords(String stopWords) {
+        this.stopWords = stopWords;
+    }
+
+    public String getStopWords() {
+        return stopWords;
+    }
 }

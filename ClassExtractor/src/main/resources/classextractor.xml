@@ -8,7 +8,7 @@
     <context:property-placeholder location="classpath:dbcon.properties" />
 
     <!--&lt;!&ndash; Study DAO &ndash;&gt;-->
-    <bean name="dbLoader" class="uk.ac.ebi.fgpt.coada.service.DBLoader">
+    <bean name="dbLoader" class="uk.ac.ebi.fgpt.coada.service.DataBaseLoader">
         <property name="jdbcTemplate" ref="jdbcTemplate" />
     </bean>
 
@@ -18,18 +18,16 @@
     </bean>
 
     <!-- Study service -->
-    <bean name="searcher" class="uk.ac.ebi.fgpt.coada.service.AnnotationRetriever">
-        <property name="dbLoader" ref="dbLoader" />
+    <bean name="retriever" class="uk.ac.ebi.fgpt.coada.service.ClassRetriever">
+        <property name="dataBaseLoader" ref="dbLoader" />
         <property name="dispatcherService" ref="dispatcherService" />
     </bean>
 
 
     <!-- Dispatcher service, should start on application startup -->
     <bean name="dispatcherService"
-          class="uk.ac.ebi.fgpt.coada.service.AnnotatorDispatcherService">
-        <property name="outFile" value="/home/dwelter/outputEFOunmap.txt" />
-        <property name="targetOntology" value="EFO" />
-        <property name="stopWords" value="cell,line" />
+          class="uk.ac.ebi.fgpt.coada.service.ExtractorDispatcherService">
+        <property name="outFile" value="/home/dwelter/mappingOutput2.txt" />
     </bean>
 
 

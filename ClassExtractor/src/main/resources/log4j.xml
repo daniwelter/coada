@@ -8,7 +8,7 @@
         </layout>
     </appender>
 
-    <appender name="coada-log" class="org.apache.log4j.DailyRollingFileAppender">
+    <appender name="uk.ac.ebi.fgpt.coada-log" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="DatePattern" value="'.'yyyy-MM-dd" />
         <param name="File" value="uk.ac.ebi.fgpt.coada.log" />
         <layout class="org.apache.log4j.PatternLayout">
@@ -26,12 +26,12 @@
 
     <logger name="org.springframework" additivity="false">
         <level value="WARN" />
-        <appender-ref ref="coada-log" />
+        <appender-ref ref="uk.ac.ebi.fgpt.coada-log" />
     </logger>
 
     <logger name="uk.ac.ebi.fgpt.goci.pussycat.GOCIPussycatMetricsDriver" additivity="false">
         <level value="DEBUG" />
-        <appender-ref ref="coada-log" />
+        <appender-ref ref="uk.ac.ebi.fgpt.coada-log" />
     </logger>
 
     <logger name="benchmark.output.log" additivity="false">
@@ -41,7 +41,7 @@
 
     <root>
         <priority value="INFO" />
-        <appender-ref ref="coada-log" />
+        <appender-ref ref="uk.ac.ebi.fgpt.coada-log" />
     </root>
 
 </log4j:configuration>
