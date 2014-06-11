@@ -1,0 +1,1 @@
+ClassExtractor is a small script to pull out labels and syonyms of ontology classes given the class URI and using the Bioportal classes API. In this case, CLO and EFO identifiers in the ChEMBL database are extracted and the output written to file.

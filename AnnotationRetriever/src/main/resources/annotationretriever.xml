@@ -27,8 +27,8 @@
     <!-- Dispatcher service, should start on application startup -->
     <bean name="dispatcherService"
           class="uk.ac.ebi.fgpt.coada.service.AnnotatorDispatcherService">
-        <property name="outFile" value="/home/dwelter/outputEFOunmap.txt" />
-        <property name="targetOntology" value="EFO" />
+        <property name="outFile" value="/home/dwelter/outputCLall.txt" />
+        <property name="targetOntology" value="CL" />
         <property name="stopWords" value="cell,line" />
     </bean>
 

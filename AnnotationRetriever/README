@@ -1,0 +1,1 @@
+AnnotationRetriever is a small script that allows the retrieval of ontology annotations from NCBO Annotator. In this implementation, the labels of cell lines are taken from the ChEMBL database and run against Annotator limited to CLO or EFO.
