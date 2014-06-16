@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:bioportal.properties" />
+
+    <!-- Dispatcher service, should start on application startup -->
+    <bean name="dispatcherService"
+          class="uk.ac.ebi.fgpt.coada.service.SearchDispatcherService">
+        <property name="inFile" value="/home/dwelter/CoriellCellLines.txt" />
+        <property name="extractionService" ref="extractionService" />
+        <property name="searchDAO" ref="searchDAO"  />
+    </bean>
+
+    <!-- Extraction service, extracts all necessary axioms from the ontology -->
+    <bean name="extractionService" class="uk.ac.ebi.fgpt.coada.service.DataExtractionService">
+        <property name="ontologyDAO" ref="cloDAO" />
+    </bean>
+
+    <!-- SearchDAO, makes the calls to the BioPortal search API -->
+    <bean name="searchDAO" class="uk.ac.ebi.fgpt.coada.dao.SearchDAO">
+        <property name="targetOntology" value="CLO" />
+        <property name="stopWords" value="cell,line" />
+    </bean>
+
+    <!-- OntologyDAO, provides access to the given ontology resource -->
+    <bean name="cloDAO" class="uk.ac.ebi.fgpt.coada.dao.OntologyDAO">
+        <property name="cloResource" value="pathToClo" />
+    </bean>
+
+
+</beans>
