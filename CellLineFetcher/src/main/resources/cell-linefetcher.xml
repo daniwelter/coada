@@ -22,12 +22,11 @@
     <!-- SearchDAO, makes the calls to the BioPortal search API -->
     <bean name="searchDAO" class="uk.ac.ebi.fgpt.coada.dao.SearchDAO">
         <property name="targetOntology" value="CLO" />
-        <property name="stopWords" value="cell,line" />
     </bean>
 
     <!-- OntologyDAO, provides access to the given ontology resource -->
     <bean name="cloDAO" class="uk.ac.ebi.fgpt.coada.dao.OntologyDAO">
-        <property name="cloResource" value="pathToClo" />
+        <property name="cloResource" value="/Users/dani/Ontologies/CellLineOntology/clo-ontology-read-only/src/ontology/clo.owl" />
     </bean>
 
 

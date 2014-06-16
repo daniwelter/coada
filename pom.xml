@@ -149,5 +149,6 @@
   <modules>
     <module>AnnotationRetriever</module>
       <module>ClassExtractor</module>
+      <module>CellLineFetcher</module>
   </modules>
 </project>
