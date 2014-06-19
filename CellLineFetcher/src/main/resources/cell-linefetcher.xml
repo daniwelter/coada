@@ -9,13 +9,15 @@
     <!-- Dispatcher service, should start on application startup -->
     <bean name="dispatcherService"
           class="uk.ac.ebi.fgpt.coada.service.SearchDispatcherService">
-        <property name="inFile" value="/home/dwelter/CoriellCellLines.txt" />
-        <property name="extractionService" ref="extractionService" />
+        <!--<property name="inFile" value="/home/dwelter/CoriellCellLines.txt" />-->
+        <property name="inFile" value="/home/dwelter/AllChembl.txt" />
+        <property name="extractionService" ref="dataExtractionService" />
         <property name="searchDAO" ref="searchDAO"  />
+        <property name="outFile" value="/home/dwelter/ChemblMappingsOut.txt" />
     </bean>
 
     <!-- Extraction service, extracts all necessary axioms from the ontology -->
-    <bean name="extractionService" class="uk.ac.ebi.fgpt.coada.service.DataExtractionService">
+    <bean name="dataExtractionService" class="uk.ac.ebi.fgpt.coada.service.DataExtractionService">
         <property name="ontologyDAO" ref="cloDAO" />
     </bean>
 
@@ -26,7 +28,9 @@
 
     <!-- OntologyDAO, provides access to the given ontology resource -->
     <bean name="cloDAO" class="uk.ac.ebi.fgpt.coada.dao.OntologyDAO">
-        <property name="cloResource" value="/Users/dani/Ontologies/CellLineOntology/clo-ontology-read-only/src/ontology/clo.owl" />
+        <property name="cloResource" value="/home/dwelter/Ontologies/CellLineOntology/clo-ontology-read-only/src/ontology/clo.owl" />
+        <!--<property name="cloResource" value="/home/dwelter/Ontologies/CellLineOntology/coriell_release.owl" />-->
+        <property name="cloURI" value="http://purl.obolibrary.org/obo/clo.owl" />
     </bean>
 
 

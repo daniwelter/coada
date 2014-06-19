@@ -1,5 +1,7 @@
 package uk.ac.ebi.fgpt.coada.model;
 
+import java.util.ArrayList;
+
 /**
  * Created by Dani on 16/06/2014.
  */
@@ -19,15 +21,36 @@ public class CellLine {
     private String ct_uri;
     private String o_uri;
     private String s_uri;
+    private String definition;
+    private ArrayList<String> syns;
 
-    public CellLine(String label, String uri){
-        this.label = label;
-        this.uri = uri;
+    public CellLine(String label, String uri, String syn){
+        this.label = label.replace("\"", "");
+        this.uri = uri.replace("\"","");
+        syns = new ArrayList<String>();
+        if(syn != null){
+            addAltTerm(syn);
+        }
+    } 
+
+    public void addAltTerm(String at){
+        syns.add(at);
     }
 
     public String getLabel() {
         return label;
     }
+
+    public ArrayList<String> getSyns() {
+        return syns;
+    }
+
+    public void setDefinition(String def){
+        this.definition = def;
+    }
+
+    public String getDefinition(){return definition;}
+
 
     public String getUri() {
         return uri;

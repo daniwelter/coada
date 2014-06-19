@@ -8,8 +8,10 @@ import uk.ac.ebi.fgpt.coada.model.CellLine;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -49,12 +51,11 @@ public class SearchDAO {
             this.searchString = properties.getProperty("bioportal.root")
                     .concat(properties.getProperty("bioportal.search"));
 
+            this.ontologyParameter = properties.getProperty("bioportal.ontologies");
+
             API_KEY = properties.getProperty("bioportal.apikey");
 
-            if(targetOntology != ""){
-                this.ontologyParameter = ("bioportal.ontologies").concat(getTargetOntology());
-            }
-        }
+         }
         catch (IOException e) {
             throw new RuntimeException(
                     "Unable to create dispatcher service: failed to read Annotator.properties resource", e);
@@ -67,21 +68,43 @@ public class SearchDAO {
     }
 
     public ArrayList<CellLine> retrieveCellLines(){
+        if(targetOntology != ""){
+            ontologyParameter = ontologyParameter.concat(getTargetOntology());
+        }
+
+        int fail = 0;
+        int pass = 0;
 
         for (String term : cellNames) {
-            JsonNode searchResult = jsonToNode(get(searchString + term + ontologyParameter)).get("collection");
+            try {
+                System.out.println("Dispatching " + searchString + URLEncoder.encode(term,"ISO-8859-1") + ontologyParameter);
+                JsonNode searchResult = jsonToNode(get(searchString + URLEncoder.encode(term,"ISO-8859-1") + ontologyParameter)).get("collection");
 
-            for (JsonNode result : searchResult){
-                if(result.get("prefLabel") != null){
-                    String name = result.get("prefLabel").toString();
-                    String uri = result.get("@id").toString();
-                    cellLines.add(new CellLine(name,uri));
+
+                if(searchResult.toString().equals("[]")){
+                    System.out.println("No result found for cell line " + term);
+                    fail++;
                 }
                 else{
-                    System.out.println("No result found for cell line " + term);
+                    pass++;
+                    for (JsonNode result : searchResult){
+                        String name = result.get("prefLabel").toString();
+                        String uri = result.get("@id").toString();
+                        String syn = "";
+
+                        if(!name.equals(term)){
+                            syn = term;
+                        }
+
+                        cellLines.add(new CellLine(name,uri,syn));
+                    }
                 }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
+
         }
+        System.out.println("Search returned results for " + pass + " terms and failed to find anything for " + fail + " out of " + cellNames.size() + " terms");
 
         return cellLines;
     }
@@ -111,17 +134,19 @@ public class SearchDAO {
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Authorization", "apikey token=" + API_KEY);
             conn.setRequestProperty("Accept", "application/json");
-            if(conn.getResponseCode() == 200){
+//            if(conn.getResponseCode() == 200){
                 rd = new BufferedReader(
                         new InputStreamReader(conn.getInputStream()));
                 while ((line = rd.readLine()) != null) {
                     result += line;
                 }
                 rd.close();
-            }
-            else{
-                result = null;
-            }
+//            }
+//            else{
+//                result = null;
+//                System.out.println("No result for " + urlToGet);
+//
+//            }
         }
         catch (Exception e) {
             e.printStackTrace();

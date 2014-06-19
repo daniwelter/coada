@@ -3,10 +3,7 @@ package uk.ac.ebi.fgpt.coada.service;
 import uk.ac.ebi.fgpt.coada.dao.SearchDAO;
 import uk.ac.ebi.fgpt.coada.model.CellLine;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -16,6 +13,7 @@ public class SearchDispatcherService {
     private String inFile;
     private SearchDAO searchDAO;
     private DataExtractionService extractionService;
+    private String outFile;
 
     public void setInFile(String inFile) {
         this.inFile = inFile;
@@ -45,10 +43,78 @@ public class SearchDispatcherService {
         ArrayList<String> inputCellLines = loadNames();
         getSearchDAO().setCellLineNames(inputCellLines);
 
+        System.out.println("About to retrieve all cells from BioPortal");
+
         ArrayList<CellLine> cellLines = getSearchDAO().retrieveCellLines();
 
-        getExtractionService().extractAxioms(cellLines);
+        System.out.println("Retrieved all cell lines from BioPortal");
 
+        printCellLines(cellLines);
+
+//        getExtractionService().extractAxioms(cellLines);
+//
+//        saveData(cellLines);
+    }
+
+    private void saveData(ArrayList<CellLine> cellLines) {
+
+        try{
+            FileWriter writer = new FileWriter(outFile);
+
+
+            String header = "Label\t \tDisease \t \tQuality\t \tCell type\t \tOrganism part\t \tOrganism\t \tDefinition\tSynonyms\n";
+            writer.write(header);
+
+            for (CellLine cl : cellLines){
+                StringBuilder nl = new StringBuilder();
+                nl.append(cl.getLabel() + "\t" + cl.getUri() + "\t");
+                nl.append(cl.getDisease() + "\t" + cl.getD_uri() + "\t");
+                nl.append(cl.getQuality() + "\t" + cl.getQ_uri() + "\t");
+                nl.append(cl.getCell_type() + "\t" + cl.getCt_uri() + "\t");
+                nl.append(cl.getOrgan() + "\t" + cl.getO_uri() + "\t");
+                nl.append(cl.getSpecies() + "\t" + cl.getS_uri() + "\t");
+                nl.append(cl.getDefinition() + "\t");
+                for(String syn : cl.getSyns()){
+                    nl.append(syn + ", ");
+                }
+                nl.append("\n");
+                writer.write(nl.toString());
+            }
+
+            writer.close();
+
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+
+
+    }
+
+    private void printCellLines(ArrayList<CellLine> cellLines) {
+        try{
+            FileWriter writer = new FileWriter(outFile);
+
+
+            String header = "Label\t \tSynonyms\n";
+            writer.write(header);
+
+            for (CellLine cl : cellLines){
+                StringBuilder nl = new StringBuilder();
+                nl.append(cl.getLabel() + "\t" + cl.getUri() + "\t");
+                for(String syn : cl.getSyns()){
+                    nl.append(syn + ", ");
+                }
+                nl.append("\n");
+                writer.write(nl.toString());
+            }
+
+            writer.close();
+
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
     }
 
 
@@ -71,7 +137,7 @@ public class SearchDispatcherService {
             try{
                 String entry = reader.readLine();
 
-                if (entry != null){
+                if (entry != null && entry != ""){
                     terms.add(entry);
                 }
                 else{
@@ -84,6 +150,12 @@ public class SearchDispatcherService {
             }
         }
 
+        System.out.println("File read successfully");
+
         return terms;
+    }
+
+    public void setOutFile(String outFile) {
+        this.outFile = outFile;
     }
 }

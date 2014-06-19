@@ -13,7 +13,7 @@
     <groupId>uk.ac.ebi.fgpt.coada</groupId>
     <artifactId>CellLineFetcher</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>ClassExtractor</name>
+    <name>CellLineFetcher</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
